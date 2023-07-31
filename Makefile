@@ -19,7 +19,8 @@ confirm:
 ## run/api: run the cmd/api application
 .PHONY: run/api
 run/api:
-	go run ./cmd/api -db-dsn=${GREENLIGHT_DB_DSN}
+	go run ./cmd/api
+
 # ==================================================================================== #
 # BUILD
 # ==================================================================================== #
