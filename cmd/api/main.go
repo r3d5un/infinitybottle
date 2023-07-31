@@ -24,6 +24,11 @@ type application struct {
 	logger *log.Logger
 }
 
+// @title Infinity Bottle API
+// @version 1.0
+// @description This is a REST API built to keep track of whisky infinity bottles and their history
+// @termsOfService http://swagger.io/terms/
+// @license.name MIT
 func main() {
 	var cfg config
 

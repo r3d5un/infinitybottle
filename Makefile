@@ -16,6 +16,10 @@ confirm:
 # DEVELOPMENT
 # ==================================================================================== #
 
+.PHONY: swagger
+swagger:
+	swag init -g ./cmd/api/main.go
+
 ## run/api: run the cmd/api application
 .PHONY: run/api
 run/api:

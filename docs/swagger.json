@@ -1,0 +1,32 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a REST API built to keep track of whisky infinity bottles and their history",
+        "title": "Infinity Bottle API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {},
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/v1/healthcheck": {
+            "get": {
+                "description": "Perform a basic request to check if the service is available",
+                "tags": [
+                    "healthcheck"
+                ],
+                "summary": "Basic healthcheck",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
