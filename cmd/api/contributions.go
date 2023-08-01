@@ -9,25 +9,36 @@ import (
 	"infinitybottle.islandwind.me/internal/data"
 )
 
+type ContributionPost struct {
+	InfinityBottleID int64    `json:"infinityBottleID"`
+	Amount           int64    `json:"amount"`
+	BrandName        string   `json:"brandName"`
+	Tags             []string `json:"tags,omitempty"`
+}
+
 func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "list brand bottles")
 }
 
+// @Summary		Add a new contribution to an infinity bottle
+// @Description	Add a new contribution to an infinity bottle
+// @Tags			contribution
+// @Produce		json
+// @Accept     json
+// @Param      Contribution	body	ContributionPost	true	"New contribution to an infinity bottle"
+// @Failure		400	{object}    ErrorMessage
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/contributions [post]
 func (app *application) createContributionHandler(w http.ResponseWriter, r *http.Request) {
-	var input struct {
-		InfinityBottleID int64    `json:"infinityBottleID"`
-		Amount           int64    `json:"amount"`
-		BrandName        string   `json:"brandName"`
-		Tags             []string `json:"tags,omitempty"`
-	}
-
-	err := json.NewDecoder(r.Body).Decode(&input)
+	contributionPost := ContributionPost{}
+	err := json.NewDecoder(r.Body).Decode(&contributionPost)
 	if err != nil {
 		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	fmt.Fprintf(w, "%+v\n", input)
+	fmt.Fprintf(w, "%+v\n", contributionPost)
 }
 
 // @Summary		Get an infinity bottle contribution by ID
