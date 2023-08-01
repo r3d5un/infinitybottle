@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"infinitybottle.islandwind.me/internal/data"
+	"infinitybottle.islandwind.me/internal/validator"
 )
 
 type ContributionPost struct {
@@ -34,6 +35,30 @@ func (app *application) createContributionHandler(w http.ResponseWriter, r *http
 	err := app.readJSON(w, r, &contributionPost)
 	if err != nil {
 		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	v := validator.New()
+
+	v.Check(contributionPost.InfinityBottleID != 0, "infinityBottleID", "must be provided")
+	v.Check(contributionPost.Amount != 0, "amount", "must be provided")
+	v.Check(contributionPost.Amount > 0, "amount", "must be greater than 0")
+	v.Check(contributionPost.BrandName != "", "brandName", "must be provided")
+	v.Check(
+		len(contributionPost.BrandName) <= 255,
+		"brandName",
+		"must not be more than 255 bytes long",
+	)
+	if contributionPost.Tags != nil {
+		v.Check(
+			validator.Unique(contributionPost.Tags),
+			"tags",
+			"must not contain duplicate values",
+		)
+	}
+
+	if !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
 

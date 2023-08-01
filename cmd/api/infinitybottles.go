@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"infinitybottle.islandwind.me/internal/data"
+	"infinitybottle.islandwind.me/internal/validator"
 )
 
 type InfinityBottlePost struct {
@@ -33,6 +34,15 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 		app.badRequestResponse(w, r, err)
 		return
 	}
+
+	v := validator.New()
+
+	v.Check(infinityBottlePost.BottleName != "", "bottleName", "must be provided")
+	v.Check(
+		len(infinityBottlePost.BottleName) <= 255,
+		"bottleName",
+		"must not be more than 255 bytes long",
+	)
 
 	fmt.Fprintf(w, "%+v\n", infinityBottlePost)
 }
