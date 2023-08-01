@@ -37,12 +37,12 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 
 	v := validator.New()
 
-	v.Check(infinityBottlePost.BottleName != "", "bottleName", "must be provided")
-	v.Check(
-		len(infinityBottlePost.BottleName) <= 255,
-		"bottleName",
-		"must not be more than 255 bytes long",
-	)
+	if data.ValidateInfinityBottle(v, &data.InfinityBottle{
+		BottleName: infinityBottlePost.BottleName,
+	}); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
 
 	fmt.Fprintf(w, "%+v\n", infinityBottlePost)
 }

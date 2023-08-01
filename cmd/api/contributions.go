@@ -40,21 +40,14 @@ func (app *application) createContributionHandler(w http.ResponseWriter, r *http
 
 	v := validator.New()
 
-	v.Check(contributionPost.InfinityBottleID != 0, "infinityBottleID", "must be provided")
-	v.Check(contributionPost.Amount != 0, "amount", "must be provided")
-	v.Check(contributionPost.Amount > 0, "amount", "must be greater than 0")
-	v.Check(contributionPost.BrandName != "", "brandName", "must be provided")
-	v.Check(
-		len(contributionPost.BrandName) <= 255,
-		"brandName",
-		"must not be more than 255 bytes long",
-	)
-	if contributionPost.Tags != nil {
-		v.Check(
-			validator.Unique(contributionPost.Tags),
-			"tags",
-			"must not contain duplicate values",
-		)
+	if data.ValidateContribution(v, &data.Contribution{
+		InfinityBottleID: contributionPost.InfinityBottleID,
+		Amount:           contributionPost.Amount,
+		BrandName:        contributionPost.BrandName,
+		Tags:             contributionPost.Tags,
+	}); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
 	}
 
 	if !v.Valid() {

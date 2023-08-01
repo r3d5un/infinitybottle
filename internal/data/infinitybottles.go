@@ -2,6 +2,8 @@ package data
 
 import (
 	"time"
+
+	"infinitybottle.islandwind.me/internal/validator"
 )
 
 type InfinityBottle struct {
@@ -12,4 +14,13 @@ type InfinityBottle struct {
 	CreatedAt             time.Time      `json:"createdAt"`
 	UpdatedAt             time.Time      `json:"updatedAt"`
 	Contributions         []Contribution `json:"contributions,omitempty"`
+}
+
+func ValidateInfinityBottle(v *validator.Validator, infinityBottle *InfinityBottle) {
+	v.Check(infinityBottle.BottleName != "", "bottleName", "must be provided")
+	v.Check(
+		len(infinityBottle.BottleName) <= 255,
+		"bottleName",
+		"must not be more than 255 bytes long",
+	)
 }
