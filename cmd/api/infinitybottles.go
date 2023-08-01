@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -8,12 +9,33 @@ import (
 	"infinitybottle.islandwind.me/internal/data"
 )
 
+type InfinityBottlePost struct {
+	BottleName string `json:"bottleName"`
+}
+
 func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "list infinity bottles")
 }
 
+// @Summary		Create a new infinity bottle
+// @Description	Create a new infinity bottle
+// @Tags			infinityBottle
+// @Produce		json
+// @Accept     json
+// @Param      InfinityBottle	body	InfinityBottlePost	true	"New infinity bottle"
+// @Failure		400	{object}    ErrorMessage
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/infinitybottles [post]
 func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "create infinity bottle")
+	infinityBottlePost := InfinityBottlePost{}
+	err := json.NewDecoder(r.Body).Decode(&infinityBottlePost)
+	if err != nil {
+		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", infinityBottlePost)
 }
 
 // @Summary		Get an infinity bottle by ID

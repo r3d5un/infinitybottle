@@ -20,6 +20,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/contributions": {
+            "post": {
+                "description": "Add a new contribution to an infinity bottle",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "contribution"
+                ],
+                "summary": "Add a new contribution to an infinity bottle",
+                "parameters": [
+                    {
+                        "description": "New contribution to an infinity bottle",
+                        "name": "Contribution",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.ContributionPost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/contributions/{id}": {
             "get": {
                 "description": "Retrieve all information about an infinity bottle contribution by ID",
@@ -74,6 +120,52 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/infinitybottles": {
+            "post": {
+                "description": "Create a new infinity bottle",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "infinityBottle"
+                ],
+                "summary": "Create a new infinity bottle",
+                "parameters": [
+                    {
+                        "description": "New infinity bottle",
+                        "name": "InfinityBottle",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.InfinityBottlePost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/main.ErrorMessage"
                         }
@@ -185,10 +277,38 @@ const docTemplate = `{
                 }
             }
         },
+        "main.ContributionPost": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "brandName": {
+                    "type": "string"
+                },
+                "infinityBottleID": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "main.ErrorMessage": {
             "type": "object",
             "properties": {
                 "message": {}
+            }
+        },
+        "main.InfinityBottlePost": {
+            "type": "object",
+            "properties": {
+                "bottleName": {
+                    "type": "string"
+                }
             }
         }
     }

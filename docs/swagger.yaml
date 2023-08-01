@@ -35,9 +35,27 @@ definitions:
       updatedAt:
         type: string
     type: object
+  main.ContributionPost:
+    properties:
+      amount:
+        type: integer
+      brandName:
+        type: string
+      infinityBottleID:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
   main.ErrorMessage:
     properties:
       message: {}
+    type: object
+  main.InfinityBottlePost:
+    properties:
+      bottleName:
+        type: string
     type: object
 info:
   contact: {}
@@ -49,6 +67,36 @@ info:
   title: Infinity Bottle API
   version: "1.0"
 paths:
+  /v1/contributions:
+    post:
+      consumes:
+      - application/json
+      description: Add a new contribution to an infinity bottle
+      parameters:
+      - description: New contribution to an infinity bottle
+        in: body
+        name: Contribution
+        required: true
+        schema:
+          $ref: '#/definitions/main.ContributionPost'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+      summary: Add a new contribution to an infinity bottle
+      tags:
+      - contribution
   /v1/contributions/{id}:
     get:
       description: Retrieve all information about an infinity bottle contribution
@@ -94,6 +142,36 @@ paths:
       summary: Basic healthcheck
       tags:
       - healthcheck
+  /v1/infinitybottles:
+    post:
+      consumes:
+      - application/json
+      description: Create a new infinity bottle
+      parameters:
+      - description: New infinity bottle
+        in: body
+        name: InfinityBottle
+        required: true
+        schema:
+          $ref: '#/definitions/main.InfinityBottlePost'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+      summary: Create a new infinity bottle
+      tags:
+      - infinityBottle
   /v1/infinitybottles/{id}:
     get:
       description: Retrieve all information about an infinity bottle by ID
