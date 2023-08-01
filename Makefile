@@ -28,9 +28,12 @@ run/api:
 ## build-and-run: build and run the cmd/api application
 .PHONY: build-and-run
 build-and-run:
+	@echo 'Creating swagger documentation...'
+	swag init -g ./cmd/api/main.go
 	@echo 'Building cmd/api...'
 	go build -ldflags='-s' -o=./bin/api ./cmd/api
 	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/linux_amd64/api ./cmd/api
+	@echo 'Running cmd/api...'
 	./bin/api
 
 # ==================================================================================== #

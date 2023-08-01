@@ -23,6 +23,9 @@ const docTemplate = `{
         "/v1/healthcheck": {
             "get": {
                 "description": "Perform a basic request to check if the service is available",
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "healthcheck"
                 ],
