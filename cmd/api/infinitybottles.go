@@ -30,7 +30,7 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 	infinityBottlePost := InfinityBottlePost{}
 	err := app.readJSON(w, r, &infinityBottlePost)
 	if err != nil {
-		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
+		app.badRequestResponse(w, r, err)
 		return
 	}
 
