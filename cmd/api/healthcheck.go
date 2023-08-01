@@ -10,8 +10,8 @@ import (
 //	@Description	Perform a basic request to check if the service is available
 //	@Tags			healthcheck
 //	@Produce		json
-//	@Success		200	{object}    string
-//	@Failure		500	{object}    string
+//	@Success		200	{object}    ErrorMessage
+//	@Failure		500	{object}    ErrorMessage
 //	@Router			/v1/healthcheck [get]
 func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]string{
@@ -22,11 +22,6 @@ func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Reques
 
 	err := app.writeJSON(w, http.StatusOK, data, nil)
 	if err != nil {
-		app.logger.Print(err)
-		http.Error(
-			w,
-			"The server encountered a problem and could not process your request.",
-			http.StatusInternalServerError,
-		)
+		app.serverErrorResponse(w, r, err)
 	}
 }

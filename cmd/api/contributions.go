@@ -22,14 +22,13 @@ func (app *application) createContributionHandler(w http.ResponseWriter, r *http
 // @Tags			contribution
 // @Produce		json
 // @Success		200	{object}    data.Contribution
-// @Failure		404	{object}    string
-// @Failure		500	{object}    string
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
 // @Router			/v1/contributions/{id} [get]
 func (app *application) getContributionHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
-		http.NotFound(w, r)
-		return
+		app.notFoundResponse(w, r)
 	}
 
 	contribution := data.Contribution{
@@ -43,11 +42,6 @@ func (app *application) getContributionHandler(w http.ResponseWriter, r *http.Re
 
 	err = app.writeJSON(w, http.StatusOK, contribution, nil)
 	if err != nil {
-		app.logger.Print(err)
-		http.Error(
-			w,
-			"The server encountered a problem and could not process your request.",
-			http.StatusInternalServerError,
-		)
+		app.serverErrorResponse(w, r, err)
 	}
 }

@@ -22,13 +22,13 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 // @Tags			infinityBottle
 // @Produce		json
 // @Success		200	{object}    data.InfinityBottle
-// @Failure		404	{object}    string
-// @Failure		500	{object}    string
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
 // @Router			/v1/infinitybottles/{id} [get]
 func (app *application) getInfinityBottleHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
-		http.NotFound(w, r)
+		app.notFoundResponse(w, r)
 		return
 	}
 
@@ -60,11 +60,6 @@ func (app *application) getInfinityBottleHandler(w http.ResponseWriter, r *http.
 
 	err = app.writeJSON(w, http.StatusOK, infinityBottle, nil)
 	if err != nil {
-		app.logger.Print(err)
-		http.Error(
-			w,
-			"The server encountered a problem and could not process your request.",
-			http.StatusInternalServerError,
-		)
+		app.serverErrorResponse(w, r, err)
 	}
 }

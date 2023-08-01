@@ -49,13 +49,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/main.ErrorMessage"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/main.ErrorMessage"
                         }
                     }
                 }
@@ -75,13 +75,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/main.ErrorMessage"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/main.ErrorMessage"
                         }
                     }
                 }
@@ -116,13 +116,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/main.ErrorMessage"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/main.ErrorMessage"
                         }
                     }
                 }
@@ -183,6 +183,12 @@ const docTemplate = `{
                 "updatedAt": {
                     "type": "string"
                 }
+            }
+        },
+        "main.ErrorMessage": {
+            "type": "object",
+            "properties": {
+                "message": {}
             }
         }
     }

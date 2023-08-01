@@ -35,6 +35,10 @@ definitions:
       updatedAt:
         type: string
     type: object
+  main.ErrorMessage:
+    properties:
+      message: {}
+    type: object
 info:
   contact: {}
   description: This is a REST API built to keep track of whisky infinity bottles and
@@ -65,11 +69,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            type: string
+            $ref: '#/definitions/main.ErrorMessage'
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            $ref: '#/definitions/main.ErrorMessage'
       summary: Get an infinity bottle contribution by ID
       tags:
       - contribution
@@ -82,11 +86,11 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/main.ErrorMessage'
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            $ref: '#/definitions/main.ErrorMessage'
       summary: Basic healthcheck
       tags:
       - healthcheck
@@ -109,11 +113,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            type: string
+            $ref: '#/definitions/main.ErrorMessage'
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            $ref: '#/definitions/main.ErrorMessage'
       summary: Get an infinity bottle by ID
       tags:
       - infinityBottle
