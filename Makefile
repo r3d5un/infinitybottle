@@ -25,9 +25,28 @@ swagger:
 run/api:
 	go run ./cmd/api
 
+## PHONY: audit
+audit:
+	@echo 'Formatting code...'
+	go fmt ./...
+	golines . -w
+	@echo 'Vetting code...'
+	go vet ./...
+	staticcheck ./...
+	@echo 'Running tests...'
+	go test -race -vet=off ./...
+
 ## build-and-run: build and run the cmd/api application
 .PHONY: build-and-run
 build-and-run:
+	@echo 'Formatting code...'
+	go fmt ./...
+	golines . -w
+	@echo 'Vetting code...'
+	go vet ./...
+	staticcheck ./...
+	@echo 'Running tests...'
+	go test -race -vet=off ./...
 	@echo 'Creating swagger documentation...'
 	swag init -g ./cmd/api/main.go
 	@echo 'Building cmd/api...'
