@@ -1,3 +1,40 @@
+definitions:
+  data.Contribution:
+    properties:
+      addedAt:
+        type: string
+      amount:
+        type: integer
+      brandName:
+        type: string
+      id:
+        type: integer
+      infinityBottleID:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+    type: object
+  data.InfinityBottle:
+    properties:
+      bottleName:
+        type: string
+      contributions:
+        items:
+          $ref: '#/definitions/data.Contribution'
+        type: array
+      createdAt:
+        type: string
+      emptyStart:
+        type: boolean
+      id:
+        type: integer
+      numberOfContributions:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
 info:
   contact: {}
   description: This is a REST API built to keep track of whisky infinity bottles and
@@ -24,7 +61,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/data.Contribution'
         "404":
           description: Not Found
           schema:
@@ -68,7 +105,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/data.InfinityBottle'
         "404":
           description: Not Found
           schema:

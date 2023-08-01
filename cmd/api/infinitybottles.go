@@ -21,7 +21,7 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 // @Param          id		path	int	true	"ID"
 // @Tags			infinityBottle
 // @Produce		json
-// @Success		200	{object}    string
+// @Success		200	{object}    data.InfinityBottle
 // @Failure		404	{object}    string
 // @Failure		500	{object}    string
 // @Router			/v1/infinitybottles/{id} [get]

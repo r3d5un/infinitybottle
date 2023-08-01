@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/data.Contribution"
                         }
                     },
                     "404": {
@@ -110,7 +110,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/data.InfinityBottle"
                         }
                     },
                     "404": {
@@ -125,6 +125,63 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "data.Contribution": {
+            "type": "object",
+            "properties": {
+                "addedAt": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "brandName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "infinityBottleID": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "data.InfinityBottle": {
+            "type": "object",
+            "properties": {
+                "bottleName": {
+                    "type": "string"
+                },
+                "contributions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.Contribution"
+                    }
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "emptyStart": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "numberOfContributions": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         }

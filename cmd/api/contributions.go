@@ -21,7 +21,7 @@ func (app *application) createContributionHandler(w http.ResponseWriter, r *http
 // @Param          id		path	int	true	"ID"
 // @Tags			contribution
 // @Produce		json
-// @Success		200	{object}    string
+// @Success		200	{object}    data.Contribution
 // @Failure		404	{object}    string
 // @Failure		500	{object}    string
 // @Router			/v1/contributions/{id} [get]
