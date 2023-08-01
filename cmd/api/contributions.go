@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -13,7 +14,20 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 }
 
 func (app *application) createContributionHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "create brand bottle")
+	var input struct {
+		InfinityBottleID int64    `json:"infinityBottleID"`
+		Amount           int64    `json:"amount"`
+		BrandName        string   `json:"brandName"`
+		Tags             []string `json:"tags,omitempty"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", input)
 }
 
 // @Summary		Get an infinity bottle contribution by ID
