@@ -32,7 +32,7 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 // @Router			/v1/contributions [post]
 func (app *application) createContributionHandler(w http.ResponseWriter, r *http.Request) {
 	contributionPost := ContributionPost{}
-	err := json.NewDecoder(r.Body).Decode(&contributionPost)
+	err := app.readJSON(w, r, &contributionPost)
 	if err != nil {
 		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 		return

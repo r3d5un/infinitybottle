@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -29,7 +28,7 @@ func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *htt
 // @Router			/v1/infinitybottles [post]
 func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *http.Request) {
 	infinityBottlePost := InfinityBottlePost{}
-	err := json.NewDecoder(r.Body).Decode(&infinityBottlePost)
+	err := app.readJSON(w, r, &infinityBottlePost)
 	if err != nil {
 		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 		return
