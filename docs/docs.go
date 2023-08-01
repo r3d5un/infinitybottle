@@ -20,6 +20,47 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/contributions/{id}": {
+            "get": {
+                "description": "Retrieve all information about an infinity bottle contribution by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "contribution"
+                ],
+                "summary": "Get an infinity bottle contribution by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/healthcheck": {
             "get": {
                 "description": "Perform a basic request to check if the service is available",
@@ -33,6 +74,47 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/infinitybottles/{id}": {
+            "get": {
+                "description": "Retrieve all information about an infinity bottle by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "infinityBottle"
+                ],
+                "summary": "Get an infinity bottle by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "type": "string"
                         }
