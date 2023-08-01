@@ -16,9 +16,9 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodPost, "/v1/infinitybottles", app.createInfinityBottleHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/infinitybottles/:id", app.getInfinityBottleHandler)
 
-	router.HandlerFunc(http.MethodGet, "/v1/brandbottles", app.listBrandBottlesHandler)
-	router.HandlerFunc(http.MethodPost, "/v1/brandbottles", app.createBrandBottleHandler)
-	router.HandlerFunc(http.MethodGet, "/v1/brandbottles/:id", app.getBrandBottleHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/brandbottles", app.listContributionsHandler)
+	router.HandlerFunc(http.MethodPost, "/v1/brandbottles", app.createContributionHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/brandbottles/:id", app.getContributionHandler)
 
 	router.HandlerFunc(http.MethodGet, "/swagger/*any", httpSwagger.WrapHandler)
 
