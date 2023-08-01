@@ -52,6 +52,15 @@ definitions:
     properties:
       message: {}
     type: object
+  main.HealthCheckMessage:
+    properties:
+      environment:
+        type: string
+      status:
+        type: string
+      version:
+        type: string
+    type: object
   main.InfinityBottlePost:
     properties:
       bottleName:
@@ -134,7 +143,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.ErrorMessage'
+            $ref: '#/definitions/main.HealthCheckMessage'
         "500":
           description: Internal Server Error
           schema:

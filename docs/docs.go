@@ -121,7 +121,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.ErrorMessage"
+                            "$ref": "#/definitions/main.HealthCheckMessage"
                         }
                     },
                     "500": {
@@ -301,6 +301,20 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "message": {}
+            }
+        },
+        "main.HealthCheckMessage": {
+            "type": "object",
+            "properties": {
+                "environment": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
             }
         },
         "main.InfinityBottlePost": {
