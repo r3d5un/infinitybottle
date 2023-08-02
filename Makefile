@@ -23,7 +23,7 @@ swagger:
 ## run/api: run the cmd/api application
 .PHONY: run/api
 run/api:
-	go run ./cmd/api
+	go run ./cmd/api -db-dsn=${INFINITYBOTTLE_DB_DSN}
 
 ## PHONY: audit
 audit:
@@ -53,7 +53,7 @@ build-and-run:
 	go build -ldflags='-s' -o=./bin/api ./cmd/api
 	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/linux_amd64/api ./cmd/api
 	@echo 'Running cmd/api...'
-	./bin/api
+	./bin/api -db-dsn=${INFINITYBOTTLE_DB_DSN}
 
 # ==================================================================================== #
 # BUILD
