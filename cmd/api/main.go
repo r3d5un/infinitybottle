@@ -5,11 +5,13 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	"infinitybottle.islandwind.me/internal/vcs"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"infinitybottle.islandwind.me/internal/data"
+	"infinitybottle.islandwind.me/internal/vcs"
 
 	_ "github.com/lib/pq"
 )
@@ -32,6 +34,7 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
+	models data.Models
 }
 
 // @title Infinity Bottle API
@@ -80,6 +83,7 @@ func main() {
 	app := application{
 		config: cfg,
 		logger: logger,
+		models: data.NewModels(db),
 	}
 
 	srv := &http.Server{

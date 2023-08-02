@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"time"
 
 	"infinitybottle.islandwind.me/internal/validator"
@@ -23,4 +24,24 @@ func ValidateInfinityBottle(v *validator.Validator, infinityBottle *InfinityBott
 		"bottleName",
 		"must not be more than 255 bytes long",
 	)
+}
+
+type InfinityBottleModel struct {
+	DB *sql.DB
+}
+
+func (m InfinityBottleModel) Insert(infinityBottle *InfinityBottle) error {
+	return nil
+}
+
+func (m InfinityBottleModel) Get(id int64) (*InfinityBottle, error) {
+	return nil, nil
+}
+
+func (m InfinityBottleModel) Update(infinityBottle *InfinityBottle) error {
+	return nil
+}
+
+func (m InfinityBottleModel) Delete(id int64) error {
+	return nil
 }

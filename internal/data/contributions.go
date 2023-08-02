@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"time"
 
 	"infinitybottle.islandwind.me/internal/validator"
@@ -32,4 +33,24 @@ func ValidateContribution(v *validator.Validator, contributionPost *Contribution
 			"must not contain duplicate values",
 		)
 	}
+}
+
+type ContributionModel struct {
+	DB *sql.DB
+}
+
+func (m ContributionModel) Insert(infinityBottle *Contribution) error {
+	return nil
+}
+
+func (m ContributionModel) Get(id int64) (*Contribution, error) {
+	return nil, nil
+}
+
+func (m ContributionModel) Update(infinityBottle *Contribution) error {
+	return nil
+}
+
+func (m ContributionModel) Delete(id int64) error {
+	return nil
 }
