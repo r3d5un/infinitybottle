@@ -45,6 +45,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/main.ContributionPost"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
@@ -158,6 +164,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/main.InfinityBottlePost"
+                        }
+                    },
                     "400": {
                         "description": "Bad Request",
                         "schema": {

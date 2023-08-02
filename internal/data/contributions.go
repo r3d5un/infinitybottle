@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/lib/pq"
 	"infinitybottle.islandwind.me/internal/validator"
 )
 
@@ -39,15 +40,25 @@ type ContributionModel struct {
 	DB *sql.DB
 }
 
-func (m ContributionModel) Insert(infinityBottle *Contribution) error {
-	return nil
+func (m ContributionModel) Insert(contribution *Contribution) error {
+	query := `
+        INSERT INTO contributions (infinitybottle_id, brand_name, tags)
+        VALUES ($1, $2, $3)
+        RETURNING id, added_at`
+
+	args := []any{
+		contribution.InfinityBottleID,
+		contribution.BrandName,
+		pq.Array(contribution.Tags),
+	}
+	return m.DB.QueryRow(query, args...).Scan(&contribution.ID, &contribution.AddedAt)
 }
 
 func (m ContributionModel) Get(id int64) (*Contribution, error) {
 	return nil, nil
 }
 
-func (m ContributionModel) Update(infinityBottle *Contribution) error {
+func (m ContributionModel) Update(contribution *Contribution) error {
 	return nil
 }
 

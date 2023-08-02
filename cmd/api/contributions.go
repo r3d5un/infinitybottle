@@ -26,6 +26,7 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 // @Produce		json
 // @Accept     json
 // @Param      Contribution	body	ContributionPost	true	"New contribution to an infinity bottle"
+// @Success		201	{object}    ContributionPost
 // @Failure		400	{object}    ErrorMessage
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
@@ -38,24 +39,33 @@ func (app *application) createContributionHandler(w http.ResponseWriter, r *http
 		return
 	}
 
-	v := validator.New()
-
-	if data.ValidateContribution(v, &data.Contribution{
+	contribution := &data.Contribution{
 		InfinityBottleID: contributionPost.InfinityBottleID,
 		Amount:           contributionPost.Amount,
 		BrandName:        contributionPost.BrandName,
 		Tags:             contributionPost.Tags,
-	}); !v.Valid() {
+	}
+
+	v := validator.New()
+
+	if data.ValidateContribution(v, contribution); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
 
-	if !v.Valid() {
-		app.failedValidationResponse(w, r, v.Errors)
+	err = app.models.Contributions.Insert(contribution)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
 		return
 	}
 
-	fmt.Fprintf(w, "%+v\n", contributionPost)
+	headers := make(http.Header)
+	headers.Set("Location", fmt.Sprintf("/v1/contributions/%d", contribution.ID))
+
+	err = app.writeJSON(w, http.StatusCreated, contribution, headers)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 // @Summary		Get an infinity bottle contribution by ID

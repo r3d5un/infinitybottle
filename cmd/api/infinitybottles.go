@@ -23,6 +23,7 @@ func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *htt
 // @Produce		json
 // @Accept     json
 // @Param      InfinityBottle	body	InfinityBottlePost	true	"New infinity bottle"
+// @Success		201	{object}    InfinityBottlePost
 // @Failure		400	{object}    ErrorMessage
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
@@ -35,16 +36,30 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 		return
 	}
 
+	infinityBottle := &data.InfinityBottle{
+		BottleName: infinityBottlePost.BottleName,
+	}
+
 	v := validator.New()
 
-	if data.ValidateInfinityBottle(v, &data.InfinityBottle{
-		BottleName: infinityBottlePost.BottleName,
-	}); !v.Valid() {
+	if data.ValidateInfinityBottle(v, infinityBottle); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
 		return
 	}
 
-	fmt.Fprintf(w, "%+v\n", infinityBottlePost)
+	err = app.models.InfinityBottles.Insert(infinityBottle)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	headers := make(http.Header)
+	headers.Set("Location", fmt.Sprintf("/v1/infinitybottles/%d", infinityBottle.ID))
+
+	err = app.writeJSON(w, http.StatusCreated, infinityBottle, headers)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 // @Summary		Get an infinity bottle by ID

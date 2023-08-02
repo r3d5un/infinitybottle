@@ -31,7 +31,13 @@ type InfinityBottleModel struct {
 }
 
 func (m InfinityBottleModel) Insert(infinityBottle *InfinityBottle) error {
-	return nil
+	query := `
+        INSERT INTO infinitybottles (bottle_name, empty_start)
+        VALUES ($1, $2)
+        RETURNING id, created_at`
+
+	args := []any{infinityBottle.BottleName, infinityBottle.EmptyStart}
+	return m.DB.QueryRow(query, args...).Scan(&infinityBottle.ID, &infinityBottle.CreatedAt)
 }
 
 func (m InfinityBottleModel) Get(id int64) (*InfinityBottle, error) {
