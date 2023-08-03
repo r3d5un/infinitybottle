@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
-	"time"
 
 	"infinitybottle.islandwind.me/internal/data"
 	"infinitybottle.islandwind.me/internal/validator"
@@ -78,30 +78,15 @@ func (app *application) getInfinityBottleHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	infinityBottle := data.InfinityBottle{
-		ID:                    id,
-		BottleName:            "Mister Smokey",
-		NumberOfContributions: 23,
-		CreatedAt:             time.Now(),
-		UpdatedAt:             time.Now(),
-		Contributions: []data.Contribution{
-			{
-				ID:               1,
-				InfinityBottleID: 1,
-				AddedAt:          time.Now(),
-				Amount:           4,
-				BrandName:        "Laphroaig",
-				Tags:             []string{"peaty", "smokey"},
-			},
-			{
-				ID:               2,
-				InfinityBottleID: 1,
-				AddedAt:          time.Now(),
-				Amount:           4,
-				BrandName:        "Ardbeg",
-				Tags:             []string{"peaty", "smokey"},
-			},
-		},
+	infinityBottle, err := app.models.InfinityBottles.Get(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
 	}
 
 	err = app.writeJSON(w, http.StatusOK, infinityBottle, nil)

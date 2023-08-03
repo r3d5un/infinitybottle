@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/lib/pq"
@@ -55,7 +56,35 @@ func (m ContributionModel) Insert(contribution *Contribution) error {
 }
 
 func (m ContributionModel) Get(id int64) (*Contribution, error) {
-	return nil, nil
+	if id < 1 {
+		return nil, ErrRecordNotFound
+	}
+
+	query := `
+        SELECT id, infinitybottle_id, added_at, amount, brand_name, tags
+        FROM contributions
+        WHERE id = $1`
+
+	var contribution Contribution
+	err := m.DB.QueryRow(query, id).Scan(
+		&contribution.ID,
+		&contribution.InfinityBottleID,
+		&contribution.AddedAt,
+		&contribution.Amount,
+		&contribution.BrandName,
+		pq.Array(&contribution.Tags),
+	)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &contribution, nil
 }
 
 func (m ContributionModel) Update(contribution *Contribution) error {

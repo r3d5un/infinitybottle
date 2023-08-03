@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
-	"time"
 
 	"infinitybottle.islandwind.me/internal/data"
 	"infinitybottle.islandwind.me/internal/validator"
@@ -83,13 +83,15 @@ func (app *application) getContributionHandler(w http.ResponseWriter, r *http.Re
 		app.notFoundResponse(w, r)
 	}
 
-	contribution := data.Contribution{
-		ID:               id,
-		InfinityBottleID: 1,
-		AddedAt:          time.Now(),
-		Amount:           4,
-		BrandName:        "Laphroaig",
-		Tags:             []string{"peaty", "smokey"},
+	contribution, err := app.models.Contributions.Get(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
 	}
 
 	err = app.writeJSON(w, http.StatusOK, contribution, nil)

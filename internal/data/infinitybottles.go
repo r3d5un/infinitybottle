@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	"infinitybottle.islandwind.me/internal/validator"
@@ -41,7 +42,35 @@ func (m InfinityBottleModel) Insert(infinityBottle *InfinityBottle) error {
 }
 
 func (m InfinityBottleModel) Get(id int64) (*InfinityBottle, error) {
-	return nil, nil
+	if id < 1 {
+		return nil, ErrRecordNotFound
+	}
+
+	query := `
+        SELECT id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
+        FROM infinitybottles
+        WHERE id = $1`
+
+	var infinityBottle InfinityBottle
+	err := m.DB.QueryRow(query, id).Scan(
+		&infinityBottle.ID,
+		&infinityBottle.BottleName,
+		&infinityBottle.NumberOfContributions,
+		&infinityBottle.EmptyStart,
+		&infinityBottle.CreatedAt,
+		&infinityBottle.UpdatedAt,
+	)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &infinityBottle, nil
 }
 
 func (m InfinityBottleModel) Update(infinityBottle *InfinityBottle) error {
