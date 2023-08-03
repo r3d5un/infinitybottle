@@ -144,7 +144,12 @@ func (app *application) updateInfinityBottleHandler(w http.ResponseWriter, r *ht
 
 	err = app.models.InfinityBottles.Update(infinityBottle)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		switch {
+		case errors.Is(err, data.ErrEditConflict):
+			app.editConflictResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
 		return
 	}
 

@@ -416,6 +416,9 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "version": {
+                    "type": "integer"
                 }
             }
         },
@@ -445,6 +448,9 @@
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "version": {
+                    "type": "integer"
                 }
             }
         },

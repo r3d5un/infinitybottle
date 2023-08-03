@@ -425,6 +425,9 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                },
+                "version": {
+                    "type": "integer"
                 }
             }
         },
@@ -454,6 +457,9 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "version": {
+                    "type": "integer"
                 }
             }
         },

@@ -149,7 +149,12 @@ func (app *application) updateContributionHandler(w http.ResponseWriter, r *http
 
 	err = app.models.Contributions.Update(contribution)
 	if err != nil {
-		app.serverErrorResponse(w, r, err)
+		switch {
+		case errors.Is(err, data.ErrEditConflict):
+			app.editConflictResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
 		return
 	}
 

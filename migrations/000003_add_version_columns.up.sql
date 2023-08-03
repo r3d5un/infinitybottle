@@ -1,0 +1,3 @@
+ALTER TABLE infinitybottles ADD COLUMN "version" BIGINT NOT NULL DEFAULT 0;
+
+ALTER TABLE contributions ADD COLUMN "version" BIGINT NOT NULL DEFAULT 0;

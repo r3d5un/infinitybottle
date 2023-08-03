@@ -16,6 +16,7 @@ type Contribution struct {
 	Amount           int64     `json:"amount"`
 	BrandName        string    `json:"brandName"`
 	Tags             []string  `json:"tags,omitempty"`
+	Version          int64     `json:"version"`
 }
 
 func ValidateContribution(v *validator.Validator, contributionPost *Contribution) {
@@ -90,18 +91,28 @@ func (m ContributionModel) Get(id int64) (*Contribution, error) {
 func (m ContributionModel) Update(contribution *Contribution) error {
 	query := `
         UPDATE contributions
-        SET infinitybottle_id = $1, brand_name = $2, tags = $3
+        SET infinitybottle_id = $1, brand_name = $2, tags = $3, version = version + 1
         WHERE id = $4
-        RETURNING id`
+        RETURNING version`
 
 	args := []any{
 		contribution.InfinityBottleID,
 		contribution.BrandName,
 		pq.Array(contribution.Tags),
 		contribution.ID,
+		contribution.Version,
 	}
 
-	return m.DB.QueryRow(query, args...).Scan(&contribution.ID)
+	err := m.DB.QueryRow(query, args...).Scan(&contribution.ID)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrRecordNotFound
+		default:
+			return err
+		}
+	}
+	return nil
 }
 
 func (m ContributionModel) Delete(id int64) error {
