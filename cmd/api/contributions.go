@@ -99,3 +99,62 @@ func (app *application) getContributionHandler(w http.ResponseWriter, r *http.Re
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+// @Summary		Update an infinity bottle contribution by ID
+// @Description	Update all information about an infinity bottle contribution by ID
+// @Param          id		path	int	true	"ID"
+// @Param      Contribution	body	ContributionPost	true	"Update contribution to an infinity bottle"
+// @Tags			contribution
+// @Produce		json
+// @Success		200	{object}    data.Contribution
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/contributions/{id} [put]
+func (app *application) updateContributionHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	contribution, err := app.models.Contributions.Get(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	input := ContributionPost{}
+	err = app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	contribution.InfinityBottleID = input.InfinityBottleID
+	contribution.Amount = input.Amount
+	contribution.BrandName = input.BrandName
+	contribution.Tags = input.Tags
+
+	v := validator.New()
+
+	if data.ValidateContribution(v, contribution); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	err = app.models.Contributions.Update(contribution)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, contribution, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}

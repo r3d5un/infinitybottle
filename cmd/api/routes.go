@@ -23,6 +23,7 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodGet, "/v1/contributions", app.listContributionsHandler)
 	router.HandlerFunc(http.MethodPost, "/v1/contributions", app.createContributionHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/contributions/:id", app.getContributionHandler)
+	router.HandlerFunc(http.MethodPut, "/v1/contributions/:id", app.updateContributionHandler)
 
 	router.HandlerFunc(http.MethodGet, "/swagger/*any", httpSwagger.WrapHandler)
 

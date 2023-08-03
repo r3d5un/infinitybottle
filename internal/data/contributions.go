@@ -88,7 +88,20 @@ func (m ContributionModel) Get(id int64) (*Contribution, error) {
 }
 
 func (m ContributionModel) Update(contribution *Contribution) error {
-	return nil
+	query := `
+        UPDATE contributions
+        SET infinitybottle_id = $1, brand_name = $2, tags = $3
+        WHERE id = $4
+        RETURNING id`
+
+	args := []any{
+		contribution.InfinityBottleID,
+		contribution.BrandName,
+		pq.Array(contribution.Tags),
+		contribution.ID,
+	}
+
+	return m.DB.QueryRow(query, args...).Scan(&contribution.ID)
 }
 
 func (m ContributionModel) Delete(id int64) error {
