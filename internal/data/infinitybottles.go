@@ -74,7 +74,15 @@ func (m InfinityBottleModel) Get(id int64) (*InfinityBottle, error) {
 }
 
 func (m InfinityBottleModel) Update(infinityBottle *InfinityBottle) error {
-	return nil
+	query := `
+        UPDATE infinitybottles
+        SET bottle_name = $1, empty_start = $2, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $3
+        RETURNING updated_at`
+
+	args := []any{infinityBottle.BottleName, infinityBottle.EmptyStart, infinityBottle.ID}
+
+	return m.DB.QueryRow(query, args...).Scan(&infinityBottle.UpdatedAt)
 }
 
 func (m InfinityBottleModel) Delete(id int64) error {

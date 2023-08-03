@@ -96,3 +96,60 @@ func (app *application) getInfinityBottleHandler(w http.ResponseWriter, r *http.
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+// @Summary		Update an infinity bottle by ID
+// @Description	Update all information about an infinity bottle by ID
+// @Param          id		path	int	true	"ID"
+// @Param      InfinityBottle	body	InfinityBottlePost	true	"Update to an infinity bottle"
+// @Tags			infinityBottle
+// @Produce		json
+// @Success		200	{object}    data.InfinityBottle
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/infinitybottle/{id} [put]
+func (app *application) updateInfinityBottleHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	infinityBottle, err := app.models.InfinityBottles.Get(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	input := InfinityBottlePost{}
+	err = app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	infinityBottle.BottleName = input.BottleName
+	infinityBottle.EmptyStart = input.EmptyStart
+
+	v := validator.New()
+
+	if data.ValidateInfinityBottle(v, infinityBottle); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	err = app.models.InfinityBottles.Update(infinityBottle)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, infinityBottle, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}

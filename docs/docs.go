@@ -187,6 +187,56 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/infinitybottle/{id}": {
+            "put": {
+                "description": "Update all information about an infinity bottle by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "infinityBottle"
+                ],
+                "summary": "Update an infinity bottle by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update to an infinity bottle",
+                        "name": "InfinityBottle",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.InfinityBottlePost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/data.InfinityBottle"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/infinitybottles": {
             "post": {
                 "description": "Create a new infinity bottle",
@@ -382,6 +432,9 @@ const docTemplate = `{
             "properties": {
                 "bottleName": {
                     "type": "string"
+                },
+                "emptyStart": {
+                    "type": "boolean"
                 }
             }
         }

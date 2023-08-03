@@ -19,6 +19,7 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodGet, "/v1/infinitybottles", app.listInfinityBottlesHandler)
 	router.HandlerFunc(http.MethodPost, "/v1/infinitybottles", app.createInfinityBottleHandler)
 	router.HandlerFunc(http.MethodGet, "/v1/infinitybottles/:id", app.getInfinityBottleHandler)
+	router.HandlerFunc(http.MethodPut, "/v1/infinitybottles/:id", app.updateInfinityBottleHandler)
 
 	router.HandlerFunc(http.MethodGet, "/v1/contributions", app.listContributionsHandler)
 	router.HandlerFunc(http.MethodPost, "/v1/contributions", app.createContributionHandler)
