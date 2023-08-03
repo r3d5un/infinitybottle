@@ -1,0 +1,1 @@
+ALTER TABLE contributions ADD COLUMN "amount" INT NOT NULL DEFAULT 0;
