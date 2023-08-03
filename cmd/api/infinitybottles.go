@@ -11,6 +11,7 @@ import (
 
 type InfinityBottlePost struct {
 	BottleName string `json:"bottleName"`
+	EmptyStart bool   `json:"emptyStart,omitempty"`
 }
 
 func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,6 +39,7 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 
 	infinityBottle := &data.InfinityBottle{
 		BottleName: infinityBottlePost.BottleName,
+		EmptyStart: infinityBottlePost.EmptyStart,
 	}
 
 	v := validator.New()
