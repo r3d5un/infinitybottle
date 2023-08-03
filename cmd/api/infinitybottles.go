@@ -106,7 +106,7 @@ func (app *application) getInfinityBottleHandler(w http.ResponseWriter, r *http.
 // @Success		200	{object}    data.InfinityBottle
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
-// @Router			/v1/infinitybottle/{id} [put]
+// @Router			/v1/infinitybottles/{id} [put]
 func (app *application) updateInfinityBottleHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
@@ -149,6 +149,39 @@ func (app *application) updateInfinityBottleHandler(w http.ResponseWriter, r *ht
 	}
 
 	err = app.writeJSON(w, http.StatusOK, infinityBottle, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}
+
+// @Summary		Delete an infinity bottle by ID
+// @Description	Delete an infinity bottle by ID
+// @Param          id		path	int	true	"ID"
+// @Tags			infinityBottle
+// @Produce		json
+// @Success		200
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/infinitybottles/{id} [delete]
+func (app *application) deleteInfinityBottleHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	err = app.models.InfinityBottles.Delete(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, nil, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

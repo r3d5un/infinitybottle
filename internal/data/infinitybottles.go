@@ -86,5 +86,26 @@ func (m InfinityBottleModel) Update(infinityBottle *InfinityBottle) error {
 }
 
 func (m InfinityBottleModel) Delete(id int64) error {
+	if id < 1 {
+		return ErrRecordNotFound
+	}
+
+	query := `
+        DELETE FROM infinitybottles
+        WHERE id = $1`
+
+	result, err := m.DB.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return ErrRecordNotFound
+	}
+
 	return nil
 }

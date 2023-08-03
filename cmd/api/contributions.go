@@ -158,3 +158,36 @@ func (app *application) updateContributionHandler(w http.ResponseWriter, r *http
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+// @Summary		Delete an infinity bottle contribution by ID
+// @Description	Delete an infinity bottle contribution by ID
+// @Param          id		path	int	true	"ID"
+// @Tags			contribution
+// @Produce		json
+// @Success		200
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/contributions/{id} [delete]
+func (app *application) deleteContributionHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
+
+	err = app.models.Contributions.Delete(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, data.ErrRecordNotFound):
+			app.notFoundResponse(w, r)
+		default:
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, nil, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}

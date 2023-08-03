@@ -113,6 +113,30 @@ paths:
       tags:
       - contribution
   /v1/contributions/{id}:
+    delete:
+      description: Delete an infinity bottle contribution by ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+      summary: Delete an infinity bottle contribution by ID
+      tags:
+      - contribution
     get:
       description: Retrieve all information about an infinity bottle contribution
         by ID
@@ -190,39 +214,6 @@ paths:
       summary: Basic healthcheck
       tags:
       - healthcheck
-  /v1/infinitybottle/{id}:
-    put:
-      description: Update all information about an infinity bottle by ID
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Update to an infinity bottle
-        in: body
-        name: InfinityBottle
-        required: true
-        schema:
-          $ref: '#/definitions/main.InfinityBottlePost'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/data.InfinityBottle'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/main.ErrorMessage'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/main.ErrorMessage'
-      summary: Update an infinity bottle by ID
-      tags:
-      - infinityBottle
   /v1/infinitybottles:
     post:
       consumes:
@@ -258,6 +249,30 @@ paths:
       tags:
       - infinityBottle
   /v1/infinitybottles/{id}:
+    delete:
+      description: Delete an infinity bottle by ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+      summary: Delete an infinity bottle by ID
+      tags:
+      - infinityBottle
     get:
       description: Retrieve all information about an infinity bottle by ID
       parameters:
@@ -282,6 +297,38 @@ paths:
           schema:
             $ref: '#/definitions/main.ErrorMessage'
       summary: Get an infinity bottle by ID
+      tags:
+      - infinityBottle
+    put:
+      description: Update all information about an infinity bottle by ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update to an infinity bottle
+        in: body
+        name: InfinityBottle
+        required: true
+        schema:
+          $ref: '#/definitions/main.InfinityBottlePost'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/data.InfinityBottle'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.ErrorMessage'
+      summary: Update an infinity bottle by ID
       tags:
       - infinityBottle
 swagger: "2.0"

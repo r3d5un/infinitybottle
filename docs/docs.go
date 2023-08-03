@@ -159,6 +159,42 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "Delete an infinity bottle contribution by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "contribution"
+                ],
+                "summary": "Delete an infinity bottle contribution by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
             }
         },
         "/v1/healthcheck": {
@@ -176,56 +212,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/main.HealthCheckMessage"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/main.ErrorMessage"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/infinitybottle/{id}": {
-            "put": {
-                "description": "Update all information about an infinity bottle by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "infinityBottle"
-                ],
-                "summary": "Update an infinity bottle by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Update to an infinity bottle",
-                        "name": "InfinityBottle",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/main.InfinityBottlePost"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/data.InfinityBottle"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.ErrorMessage"
                         }
                     },
                     "500": {
@@ -314,6 +300,90 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/data.InfinityBottle"
                         }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update all information about an infinity bottle by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "infinityBottle"
+                ],
+                "summary": "Update an infinity bottle by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update to an infinity bottle",
+                        "name": "InfinityBottle",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.InfinityBottlePost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/data.InfinityBottle"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete an infinity bottle by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "infinityBottle"
+                ],
+                "summary": "Delete an infinity bottle by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "404": {
                         "description": "Not Found",
