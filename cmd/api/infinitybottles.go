@@ -14,8 +14,25 @@ type InfinityBottlePost struct {
 	EmptyStart bool   `json:"emptyStart,omitempty"`
 }
 
+// @Summary		List all infinity bottles
+// @Description	List all infinity bottles
+// @Tags			infinityBottle
+// @Produce		json
+// @Success		200	{array}     data.InfinityBottle
+// @Failure		400	{object}    ErrorMessage
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/infinitybottles [get]
 func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "list infinity bottles")
+	infinityBottles, err := app.models.InfinityBottles.GetAll()
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+	err = app.writeJSON(w, http.StatusOK, infinityBottles, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 // @Summary		Create a new infinity bottle

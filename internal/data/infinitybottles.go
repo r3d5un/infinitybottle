@@ -141,3 +141,43 @@ func (m InfinityBottleModel) Delete(id int64) error {
 
 	return nil
 }
+
+func (m InfinityBottleModel) GetAll() ([]*InfinityBottle, error) {
+	query := `
+        SELECT id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
+        FROM infinitybottles
+        ORDER BY id`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	infinityBottles := []*InfinityBottle{}
+
+	for rows.Next() {
+		var infinityBottle InfinityBottle
+		err := rows.Scan(
+			&infinityBottle.ID,
+			&infinityBottle.BottleName,
+			&infinityBottle.NumberOfContributions,
+			&infinityBottle.EmptyStart,
+			&infinityBottle.CreatedAt,
+			&infinityBottle.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		infinityBottles = append(infinityBottles, &infinityBottle)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return infinityBottles, nil
+}

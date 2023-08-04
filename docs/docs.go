@@ -224,6 +224,45 @@ const docTemplate = `{
             }
         },
         "/v1/infinitybottles": {
+            "get": {
+                "description": "List all infinity bottles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "infinityBottle"
+                ],
+                "summary": "List all infinity bottles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.InfinityBottle"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a new infinity bottle",
                 "consumes": [
