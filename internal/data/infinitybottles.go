@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"time"
@@ -39,7 +40,12 @@ func (m InfinityBottleModel) Insert(infinityBottle *InfinityBottle) error {
         RETURNING id, created_at`
 
 	args := []any{infinityBottle.BottleName, infinityBottle.EmptyStart}
-	return m.DB.QueryRow(query, args...).Scan(&infinityBottle.ID, &infinityBottle.CreatedAt)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	return m.DB.QueryRowContext(ctx, query, args...).
+		Scan(&infinityBottle.ID, &infinityBottle.CreatedAt)
 }
 
 func (m InfinityBottleModel) Get(id int64) (*InfinityBottle, error) {
@@ -53,7 +59,11 @@ func (m InfinityBottleModel) Get(id int64) (*InfinityBottle, error) {
         WHERE id = $1`
 
 	var infinityBottle InfinityBottle
-	err := m.DB.QueryRow(query, id).Scan(
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, id).Scan(
 		&infinityBottle.ID,
 		&infinityBottle.BottleName,
 		&infinityBottle.NumberOfContributions,
@@ -88,7 +98,10 @@ func (m InfinityBottleModel) Update(infinityBottle *InfinityBottle) error {
 		infinityBottle.Version,
 	}
 
-	err := m.DB.QueryRow(query, args...).Scan(&infinityBottle.UpdatedAt)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, args...).Scan(&infinityBottle.UpdatedAt)
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
@@ -110,7 +123,10 @@ func (m InfinityBottleModel) Delete(id int64) error {
         DELETE FROM infinitybottles
         WHERE id = $1`
 
-	result, err := m.DB.Exec(query, id)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	result, err := m.DB.ExecContext(ctx, query, id)
 	if err != nil {
 		return err
 	}
