@@ -16,8 +16,40 @@ type ContributionPost struct {
 	Tags             []string `json:"tags,omitempty"`
 }
 
+// @Summary		List all infinity bottle contributions
+// @Description	List all infinity bottles contributions
+// @Tags			contribution
+// @Produce		json
+// @Success		200	{array}     data.Contribution
+// @Failure		400	{object}    ErrorMessage
+// @Failure		404	{object}    ErrorMessage
+// @Failure		500	{object}    ErrorMessage
+// @Router			/v1/contribution [get]
 func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "list brand bottles")
+	var input struct {
+		BrandName string
+		Tags      []string
+		data.Filters
+	}
+
+	v := validator.New()
+
+	qs := r.URL.Query()
+
+	input.BrandName = app.readStrings(qs, "brandName", "")
+	input.Tags = app.readCSV(qs, "tags", []string{})
+
+	input.Filters.Page = app.readInt(qs, "page", 1, v)
+	input.Filters.PageSize = app.readInt(qs, "page_sixe", 20, v)
+
+	input.Filters.Sort = app.readStrings(qs, "sort", "id")
+
+	if !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	fmt.Fprint(w, "%+/n", input)
 }
 
 // @Summary		Add a new contribution to an infinity bottle

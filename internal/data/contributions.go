@@ -154,3 +154,7 @@ func (m ContributionModel) Delete(id int64) error {
 
 	return nil
 }
+
+func (m ContributionModel) GetAll() ([]*Contribution, error) {
+	return nil, nil
+}

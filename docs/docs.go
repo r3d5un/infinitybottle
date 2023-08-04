@@ -20,6 +20,47 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/contribution": {
+            "get": {
+                "description": "List all infinity bottles contributions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "contribution"
+                ],
+                "summary": "List all infinity bottle contributions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/data.Contribution"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/contributions": {
             "post": {
                 "description": "Add a new contribution to an infinity bottle",
