@@ -20,6 +20,10 @@ type ContributionPost struct {
 // @Description	List all infinity bottles contributions
 // @Tags			contribution
 // @Produce		json
+//
+//	@Param			brandName	query		string	false	"brand name to search for"
+//	@Param			tags	query		string	false	"tags to search for"
+//
 // @Success		200	{array}     data.Contribution
 // @Failure		400	{object}    ErrorMessage
 // @Failure		404	{object}    ErrorMessage

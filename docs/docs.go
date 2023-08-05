@@ -30,6 +30,20 @@ const docTemplate = `{
                     "contribution"
                 ],
                 "summary": "List all infinity bottle contributions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "brand name to search for",
+                        "name": "brandName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "tags to search for",
+                        "name": "tags",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

@@ -85,6 +85,15 @@ paths:
   /v1/contribution:
     get:
       description: List all infinity bottles contributions
+      parameters:
+      - description: brand name to search for
+        in: query
+        name: brandName
+        type: string
+      - description: tags to search for
+        in: query
+        name: tags
+        type: string
       produces:
       - application/json
       responses:
