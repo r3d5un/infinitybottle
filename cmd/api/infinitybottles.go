@@ -18,13 +18,40 @@ type InfinityBottlePost struct {
 // @Description	List all infinity bottles
 // @Tags			infinityBottle
 // @Produce		json
+//
+//	@Param			bottleName	query		string	false	"bottle name to search for"
+//
 // @Success		200	{array}     data.InfinityBottle
 // @Failure		400	{object}    ErrorMessage
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
 // @Router			/v1/infinitybottles [get]
 func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *http.Request) {
-	infinityBottles, err := app.models.InfinityBottles.GetAll()
+	var input struct {
+		BottleName string
+		data.Filters
+	}
+
+	v := validator.New()
+
+	qs := r.URL.Query()
+
+	input.BottleName = app.readStrings(qs, "bottleName", "")
+
+	input.Filters.Page = app.readInt(qs, "page", 1, v)
+	input.Filters.PageSize = app.readInt(qs, "page_size", 20, v)
+	input.Filters.Sort = app.readStrings(qs, "sort", "id")
+	input.Filters.SortSafelist = []string{"id", "bottleName"}
+
+	if data.ValidateFilters(v, input.Filters); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	infinityBottles, err := app.models.InfinityBottles.GetAll(
+		input.BottleName,
+		input.Filters,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return

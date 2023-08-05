@@ -257,6 +257,11 @@ paths:
   /v1/infinitybottles:
     get:
       description: List all infinity bottles
+      parameters:
+      - description: bottle name to search for
+        in: query
+        name: bottleName
+        type: string
       produces:
       - application/json
       responses:

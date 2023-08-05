@@ -142,21 +142,23 @@ func (m InfinityBottleModel) Delete(id int64) error {
 	return nil
 }
 
-func (m InfinityBottleModel) GetAll() ([]*InfinityBottle, error) {
+func (m InfinityBottleModel) GetAll(bottleName string, filters Filters) ([]*InfinityBottle, error) {
 	query := `
         SELECT id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
         FROM infinitybottles
+        WHERE (LOWER(bottle_name) LIKE LOWER($1) OR $1 = '')
         ORDER BY id`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := m.DB.QueryContext(ctx, query)
+	rows, err := m.DB.QueryContext(ctx, query, bottleName)
 	if err != nil {
 		return nil, err
 	}
 
 	defer rows.Close()
+
 	infinityBottles := []*InfinityBottle{}
 
 	for rows.Next() {

@@ -288,6 +288,14 @@ const docTemplate = `{
                     "infinityBottle"
                 ],
                 "summary": "List all infinity bottles",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bottle name to search for",
+                        "name": "bottleName",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
