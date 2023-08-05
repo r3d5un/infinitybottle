@@ -148,12 +148,13 @@ func (m InfinityBottleModel) GetAll(bottleName string, filters Filters) ([]*Infi
         SELECT id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
         FROM infinitybottles
         WHERE (to_tsvector('simple', bottle_name) @@ plainto_tsquery('simple', $1) OR $1 = '')
-        ORDER BY %s %s, id ASC`, filters.sortColumn(), filters.sortDirection())
+        ORDER BY %s %s, id ASC
+        LIMIT $3 OFFSET $4`, filters.sortColumn(), filters.sortDirection())
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := m.DB.QueryContext(ctx, query, bottleName)
+	rows, err := m.DB.QueryContext(ctx, query, bottleName, filters.limit(), filters.offset())
 	if err != nil {
 		return nil, err
 	}

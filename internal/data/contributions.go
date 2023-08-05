@@ -166,12 +166,20 @@ func (m ContributionModel) GetAll(
         FROM contributions
         WHERE (to_tsvector('simple', brand_name) @@ plainto_tsquery('simple', $1) OR $1 = ''
         AND (tags @> $2 OR $2 = '{}')
-        ORDER BY %s %s, id`, filters.sortColumn(), filters.sortDirection())
+        ORDER BY %s %s, id
+        LIMIT $3 OFFSET $4`, filters.sortColumn(), filters.sortDirection())
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := m.DB.QueryContext(ctx, query, brandName, pq.Array(tags))
+	rows, err := m.DB.QueryContext(
+		ctx,
+		query,
+		brandName,
+		pq.Array(tags),
+		filters.limit(),
+		filters.offset(),
+	)
 	if err != nil {
 		return nil, err
 	}
