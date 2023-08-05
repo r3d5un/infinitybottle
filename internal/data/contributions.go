@@ -163,7 +163,7 @@ func (m ContributionModel) GetAll(
 	query := `
         SELECT id, infinitybottle_id, added_at, amount, brand_name, tags
         FROM contributions
-        WHERE (LOWER(brand_name) = LOWER($1) OR $1 = '') 
+        WHERE (to_tsvector('simple', brand_name) @@ plainto_tsquery('simple', $1) OR $1 = ''
         AND (tags @> $2 OR $2 = '{}')
         ORDER BY id`
 

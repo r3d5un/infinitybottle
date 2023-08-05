@@ -146,7 +146,7 @@ func (m InfinityBottleModel) GetAll(bottleName string, filters Filters) ([]*Infi
 	query := `
         SELECT id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
         FROM infinitybottles
-        WHERE (LOWER(bottle_name) LIKE LOWER($1) OR $1 = '')
+        WHERE (to_tsvector('simple', bottle_name) @@ plainto_tsquery('simple', $1) OR $1 = '')
         ORDER BY id`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
