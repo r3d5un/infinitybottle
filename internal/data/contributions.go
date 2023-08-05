@@ -163,12 +163,14 @@ func (m ContributionModel) GetAll(
 	query := `
         SELECT id, infinitybottle_id, added_at, amount, brand_name, tags
         FROM contributions
-        ORDER BY id = $1`
+        WHERE (LOWER(brand_name) = LOWER($1) OR $1 = '') 
+        AND (tags @> $2 OR $2 = '{}')
+        ORDER BY id`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	rows, err := m.DB.QueryContext(ctx, query)
+	rows, err := m.DB.QueryContext(ctx, query, brandName, pq.Array(tags))
 	if err != nil {
 		return nil, err
 	}
