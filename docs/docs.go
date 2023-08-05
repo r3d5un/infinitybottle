@@ -34,7 +34,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "brand name to search for",
-                        "name": "brandName",
+                        "name": "brand_name",
                         "in": "query"
                     },
                     {
@@ -292,7 +292,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "bottle name to search for",
-                        "name": "bottleName",
+                        "name": "bottle_name",
                         "in": "query"
                     }
                 ],

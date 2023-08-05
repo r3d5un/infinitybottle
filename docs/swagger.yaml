@@ -88,7 +88,7 @@ paths:
       parameters:
       - description: brand name to search for
         in: query
-        name: brandName
+        name: brand_name
         type: string
       - description: tags to search for
         in: query
@@ -260,7 +260,7 @@ paths:
       parameters:
       - description: bottle name to search for
         in: query
-        name: bottleName
+        name: bottle_name
         type: string
       produces:
       - application/json

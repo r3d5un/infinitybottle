@@ -21,7 +21,7 @@ type ContributionPost struct {
 // @Tags			contribution
 // @Produce		json
 //
-//	@Param			brandName	query		string	false	"brand name to search for"
+//	@Param			brand_name	query		string	false	"brand name to search for"
 //	@Param			tags	query		string	false	"tags to search for"
 //
 // @Success		200	{array}     data.Contribution
@@ -46,7 +46,7 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 	input.Filters.Page = app.readInt(qs, "page", 1, v)
 	input.Filters.PageSize = app.readInt(qs, "page_sixe", 20, v)
 	input.Filters.Sort = app.readStrings(qs, "sort", "id")
-	input.Filters.SortSafelist = []string{"id", "brandName"}
+	input.Filters.SortSafelist = []string{"id", "-id", "brand_name", "-brand_name"}
 
 	if data.ValidateFilters(v, input.Filters); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"infinitybottle.islandwind.me/internal/validator"
@@ -143,11 +144,11 @@ func (m InfinityBottleModel) Delete(id int64) error {
 }
 
 func (m InfinityBottleModel) GetAll(bottleName string, filters Filters) ([]*InfinityBottle, error) {
-	query := `
+	query := fmt.Sprintf(`
         SELECT id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
         FROM infinitybottles
         WHERE (to_tsvector('simple', bottle_name) @@ plainto_tsquery('simple', $1) OR $1 = '')
-        ORDER BY id`
+        ORDER BY %s %s, id ASC`, filters.sortColumn(), filters.sortDirection())
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

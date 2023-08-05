@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/lib/pq"
@@ -160,12 +161,12 @@ func (m ContributionModel) GetAll(
 	tags []string,
 	filters Filters,
 ) ([]*Contribution, error) {
-	query := `
+	query := fmt.Sprintf(`
         SELECT id, infinitybottle_id, added_at, amount, brand_name, tags
         FROM contributions
         WHERE (to_tsvector('simple', brand_name) @@ plainto_tsquery('simple', $1) OR $1 = ''
         AND (tags @> $2 OR $2 = '{}')
-        ORDER BY id`
+        ORDER BY %s %s, id`, filters.sortColumn(), filters.sortDirection())
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

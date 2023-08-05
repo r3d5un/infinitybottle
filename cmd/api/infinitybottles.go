@@ -19,7 +19,7 @@ type InfinityBottlePost struct {
 // @Tags			infinityBottle
 // @Produce		json
 //
-//	@Param			bottleName	query		string	false	"bottle name to search for"
+//	@Param			bottle_name	query		string	false	"bottle name to search for"
 //
 // @Success		200	{array}     data.InfinityBottle
 // @Failure		400	{object}    ErrorMessage
@@ -41,7 +41,7 @@ func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *htt
 	input.Filters.Page = app.readInt(qs, "page", 1, v)
 	input.Filters.PageSize = app.readInt(qs, "page_size", 20, v)
 	input.Filters.Sort = app.readStrings(qs, "sort", "id")
-	input.Filters.SortSafelist = []string{"id", "bottleName"}
+	input.Filters.SortSafelist = []string{"id", "-id", "bottle_name", "-bottle_name"}
 
 	if data.ValidateFilters(v, input.Filters); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)
