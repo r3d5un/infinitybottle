@@ -49,7 +49,20 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	fmt.Fprint(w, "%+/n", input)
+	contributions, err := app.models.Contributions.GetAll(
+		input.BrandName,
+		input.Tags,
+		input.Filters,
+	)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, contributions, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }
 
 // @Summary		Add a new contribution to an infinity bottle

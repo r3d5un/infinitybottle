@@ -155,6 +155,44 @@ func (m ContributionModel) Delete(id int64) error {
 	return nil
 }
 
-func (m ContributionModel) GetAll() ([]*Contribution, error) {
-	return nil, nil
+func (m ContributionModel) GetAll(
+	brandName string,
+	tags []string,
+	filters Filters,
+) ([]*Contribution, error) {
+	query := `
+        SELECT id, infinitybottle_id, added_at, amount, brand_name, tags
+        FROM contributions
+        ORDER BY id = $1`
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	contributions := []*Contribution{}
+
+	for rows.Next() {
+		var contribution Contribution
+
+		err := rows.Scan(
+			&contribution.BrandName,
+			&contribution.Tags,
+		)
+		if err != nil {
+			return nil, err
+		}
+		contributions = append(contributions, &contribution)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return contributions, nil
 }
