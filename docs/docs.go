@@ -50,7 +50,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/data.Contribution"
+                                "$ref": "#/definitions/main.ContributionListResponse"
                             }
                         }
                     },
@@ -103,7 +103,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.ContributionPost"
+                            "$ref": "#/definitions/main.ContributionResponse"
                         }
                     },
                     "400": {
@@ -150,7 +150,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.Contribution"
+                            "$ref": "#/definitions/main.ContributionResponse"
                         }
                     },
                     "404": {
@@ -198,7 +198,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.Contribution"
+                            "$ref": "#/definitions/main.ContributionResponse"
                         }
                     },
                     "404": {
@@ -302,7 +302,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/data.InfinityBottle"
+                                "$ref": "#/definitions/main.InfinityBottleListResponse"
                             }
                         }
                     },
@@ -400,7 +400,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.InfinityBottle"
+                            "$ref": "#/definitions/main.InfinityBottleResponse"
                         }
                     },
                     "404": {
@@ -448,7 +448,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/data.InfinityBottle"
+                            "$ref": "#/definitions/main.InfinityBottleResponse"
                         }
                     },
                     "404": {
@@ -565,6 +565,40 @@ const docTemplate = `{
                 }
             }
         },
+        "data.Metadata": {
+            "type": "object",
+            "properties": {
+                "currentPage": {
+                    "type": "integer"
+                },
+                "firstPage": {
+                    "type": "integer"
+                },
+                "lastPage": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalRecords": {
+                    "type": "integer"
+                }
+            }
+        },
+        "main.ContributionListResponse": {
+            "type": "object",
+            "properties": {
+                "contributions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.Contribution"
+                    }
+                },
+                "metadata": {
+                    "$ref": "#/definitions/data.Metadata"
+                }
+            }
+        },
         "main.ContributionPost": {
             "type": "object",
             "properties": {
@@ -582,6 +616,17 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "main.ContributionResponse": {
+            "type": "object",
+            "properties": {
+                "contributions": {
+                    "$ref": "#/definitions/data.Contribution"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/data.Metadata"
                 }
             }
         },
@@ -605,6 +650,20 @@ const docTemplate = `{
                 }
             }
         },
+        "main.InfinityBottleListResponse": {
+            "type": "object",
+            "properties": {
+                "contributions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/data.InfinityBottle"
+                    }
+                },
+                "metadata": {
+                    "$ref": "#/definitions/data.Metadata"
+                }
+            }
+        },
         "main.InfinityBottlePost": {
             "type": "object",
             "properties": {
@@ -613,6 +672,17 @@ const docTemplate = `{
                 },
                 "emptyStart": {
                     "type": "boolean"
+                }
+            }
+        },
+        "main.InfinityBottleResponse": {
+            "type": "object",
+            "properties": {
+                "contributions": {
+                    "$ref": "#/definitions/data.InfinityBottle"
+                },
+                "metadata": {
+                    "$ref": "#/definitions/data.Metadata"
                 }
             }
         }

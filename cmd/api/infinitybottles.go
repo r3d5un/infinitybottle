@@ -14,6 +14,16 @@ type InfinityBottlePost struct {
 	EmptyStart bool   `json:"emptyStart,omitempty"`
 }
 
+type InfinityBottleResponse struct {
+	Metadata       data.Metadata       `json:"metadata"`
+	InfinityBottle data.InfinityBottle `json:"contributions"`
+}
+
+type InfinityBottleListResponse struct {
+	Metadata        data.Metadata          `json:"metadata"`
+	InfinityBottles []*data.InfinityBottle `json:"contributions"`
+}
+
 // @Summary		List all infinity bottles
 // @Description	List all infinity bottles
 // @Tags			infinityBottle
@@ -21,7 +31,7 @@ type InfinityBottlePost struct {
 //
 //	@Param			bottle_name	query		string	false	"bottle name to search for"
 //
-// @Success		200	{array}     data.InfinityBottle
+// @Success		200	{array}     InfinityBottleListResponse
 // @Failure		400	{object}    ErrorMessage
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
@@ -48,7 +58,7 @@ func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *htt
 		return
 	}
 
-	infinityBottles, err := app.models.InfinityBottles.GetAll(
+	infinityBottles, metadata, err := app.models.InfinityBottles.GetAll(
 		input.BottleName,
 		input.Filters,
 	)
@@ -56,7 +66,12 @@ func (app *application) listInfinityBottlesHandler(w http.ResponseWriter, r *htt
 		app.serverErrorResponse(w, r, err)
 		return
 	}
-	err = app.writeJSON(w, http.StatusOK, infinityBottles, nil)
+	err = app.writeJSON(
+		w,
+		http.StatusOK,
+		InfinityBottleListResponse{Metadata: metadata, InfinityBottles: infinityBottles},
+		nil,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -102,7 +117,12 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 	headers := make(http.Header)
 	headers.Set("Location", fmt.Sprintf("/v1/infinitybottles/%d", infinityBottle.ID))
 
-	err = app.writeJSON(w, http.StatusCreated, infinityBottle, headers)
+	err = app.writeJSON(
+		w,
+		http.StatusCreated,
+		InfinityBottleResponse{Metadata: data.Metadata{}, InfinityBottle: *infinityBottle},
+		headers,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -113,7 +133,7 @@ func (app *application) createInfinityBottleHandler(w http.ResponseWriter, r *ht
 // @Param          id		path	int	true	"ID"
 // @Tags			infinityBottle
 // @Produce		json
-// @Success		200	{object}    data.InfinityBottle
+// @Success		200	{object}    InfinityBottleResponse
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
 // @Router			/v1/infinitybottles/{id} [get]
@@ -135,7 +155,12 @@ func (app *application) getInfinityBottleHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, infinityBottle, nil)
+	err = app.writeJSON(
+		w,
+		http.StatusOK,
+		InfinityBottleResponse{Metadata: data.Metadata{}, InfinityBottle: *infinityBottle},
+		nil,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -147,7 +172,7 @@ func (app *application) getInfinityBottleHandler(w http.ResponseWriter, r *http.
 // @Param      InfinityBottle	body	InfinityBottlePost	true	"Update to an infinity bottle"
 // @Tags			infinityBottle
 // @Produce		json
-// @Success		200	{object}    data.InfinityBottle
+// @Success		200	{object}    InfinityBottleResponse
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
 // @Router			/v1/infinitybottles/{id} [put]
@@ -197,7 +222,12 @@ func (app *application) updateInfinityBottleHandler(w http.ResponseWriter, r *ht
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, infinityBottle, nil)
+	err = app.writeJSON(
+		w,
+		http.StatusOK,
+		InfinityBottleResponse{Metadata: data.Metadata{}, InfinityBottle: *infinityBottle},
+		nil,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}

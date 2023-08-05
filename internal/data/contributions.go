@@ -160,9 +160,9 @@ func (m ContributionModel) GetAll(
 	brandName string,
 	tags []string,
 	filters Filters,
-) ([]*Contribution, error) {
+) ([]*Contribution, Metadata, error) {
 	query := fmt.Sprintf(`
-        SELECT id, infinitybottle_id, added_at, amount, brand_name, tags
+        SELECT COUNT(*) OVER(), id, infinitybottle_id, added_at, amount, brand_name, tags
         FROM contributions
         WHERE (to_tsvector('simple', brand_name) @@ plainto_tsquery('simple', $1) OR $1 = ''
         AND (tags @> $2 OR $2 = '{}')
@@ -181,29 +181,33 @@ func (m ContributionModel) GetAll(
 		filters.offset(),
 	)
 	if err != nil {
-		return nil, err
+		return nil, Metadata{}, err
 	}
 
 	defer rows.Close()
 
+	totalRecords := 0
 	contributions := []*Contribution{}
 
 	for rows.Next() {
 		var contribution Contribution
 
 		err := rows.Scan(
+			&totalRecords,
 			&contribution.BrandName,
 			&contribution.Tags,
 		)
 		if err != nil {
-			return nil, err
+			return nil, Metadata{}, err
 		}
 		contributions = append(contributions, &contribution)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, Metadata{}, err
 	}
 
-	return contributions, nil
+	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
+
+	return contributions, metadata, nil
 }

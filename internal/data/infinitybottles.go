@@ -143,9 +143,12 @@ func (m InfinityBottleModel) Delete(id int64) error {
 	return nil
 }
 
-func (m InfinityBottleModel) GetAll(bottleName string, filters Filters) ([]*InfinityBottle, error) {
+func (m InfinityBottleModel) GetAll(
+	bottleName string,
+	filters Filters,
+) ([]*InfinityBottle, Metadata, error) {
 	query := fmt.Sprintf(`
-        SELECT id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
+        SELECT COUNT(*) OVER(), id, bottle_name, number_of_contributions, empty_start, created_at, updated_at
         FROM infinitybottles
         WHERE (to_tsvector('simple', bottle_name) @@ plainto_tsquery('simple', $1) OR $1 = '')
         ORDER BY %s %s, id ASC
@@ -156,16 +159,18 @@ func (m InfinityBottleModel) GetAll(bottleName string, filters Filters) ([]*Infi
 
 	rows, err := m.DB.QueryContext(ctx, query, bottleName, filters.limit(), filters.offset())
 	if err != nil {
-		return nil, err
+		return nil, Metadata{}, err
 	}
 
 	defer rows.Close()
 
+	totalRecords := 0
 	infinityBottles := []*InfinityBottle{}
 
 	for rows.Next() {
 		var infinityBottle InfinityBottle
 		err := rows.Scan(
+			&totalRecords,
 			&infinityBottle.ID,
 			&infinityBottle.BottleName,
 			&infinityBottle.NumberOfContributions,
@@ -174,14 +179,16 @@ func (m InfinityBottleModel) GetAll(bottleName string, filters Filters) ([]*Infi
 			&infinityBottle.UpdatedAt,
 		)
 		if err != nil {
-			return nil, err
+			return nil, Metadata{}, err
 		}
 		infinityBottles = append(infinityBottles, &infinityBottle)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, Metadata{}, err
 	}
 
-	return infinityBottles, nil
+	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
+
+	return infinityBottles, metadata, nil
 }

@@ -39,6 +39,28 @@ definitions:
       version:
         type: integer
     type: object
+  data.Metadata:
+    properties:
+      currentPage:
+        type: integer
+      firstPage:
+        type: integer
+      lastPage:
+        type: integer
+      pageSize:
+        type: integer
+      totalRecords:
+        type: integer
+    type: object
+  main.ContributionListResponse:
+    properties:
+      contributions:
+        items:
+          $ref: '#/definitions/data.Contribution'
+        type: array
+      metadata:
+        $ref: '#/definitions/data.Metadata'
+    type: object
   main.ContributionPost:
     properties:
       amount:
@@ -51,6 +73,13 @@ definitions:
         items:
           type: string
         type: array
+    type: object
+  main.ContributionResponse:
+    properties:
+      contributions:
+        $ref: '#/definitions/data.Contribution'
+      metadata:
+        $ref: '#/definitions/data.Metadata'
     type: object
   main.ErrorMessage:
     properties:
@@ -65,12 +94,28 @@ definitions:
       version:
         type: string
     type: object
+  main.InfinityBottleListResponse:
+    properties:
+      contributions:
+        items:
+          $ref: '#/definitions/data.InfinityBottle'
+        type: array
+      metadata:
+        $ref: '#/definitions/data.Metadata'
+    type: object
   main.InfinityBottlePost:
     properties:
       bottleName:
         type: string
       emptyStart:
         type: boolean
+    type: object
+  main.InfinityBottleResponse:
+    properties:
+      contributions:
+        $ref: '#/definitions/data.InfinityBottle'
+      metadata:
+        $ref: '#/definitions/data.Metadata'
     type: object
 info:
   contact: {}
@@ -101,7 +146,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/data.Contribution'
+              $ref: '#/definitions/main.ContributionListResponse'
             type: array
         "400":
           description: Bad Request
@@ -136,7 +181,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.ContributionPost'
+            $ref: '#/definitions/main.ContributionResponse'
         "400":
           description: Bad Request
           schema:
@@ -192,7 +237,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/data.Contribution'
+            $ref: '#/definitions/main.ContributionResponse'
         "404":
           description: Not Found
           schema:
@@ -225,7 +270,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/data.Contribution'
+            $ref: '#/definitions/main.ContributionResponse'
         "404":
           description: Not Found
           schema:
@@ -269,7 +314,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/data.InfinityBottle'
+              $ref: '#/definitions/main.InfinityBottleListResponse'
             type: array
         "400":
           description: Bad Request
@@ -358,7 +403,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/data.InfinityBottle'
+            $ref: '#/definitions/main.InfinityBottleResponse'
         "404":
           description: Not Found
           schema:
@@ -390,7 +435,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/data.InfinityBottle'
+            $ref: '#/definitions/main.InfinityBottleResponse'
         "404":
           description: Not Found
           schema:

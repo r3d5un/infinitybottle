@@ -16,6 +16,16 @@ type ContributionPost struct {
 	Tags             []string `json:"tags,omitempty"`
 }
 
+type ContributionResponse struct {
+	Metadata     data.Metadata     `json:"metadata"`
+	Contribution data.Contribution `json:"contributions"`
+}
+
+type ContributionListResponse struct {
+	Metadata      data.Metadata        `json:"metadata"`
+	Contributions []*data.Contribution `json:"contributions"`
+}
+
 // @Summary		List all infinity bottle contributions
 // @Description	List all infinity bottles contributions
 // @Tags			contribution
@@ -24,7 +34,7 @@ type ContributionPost struct {
 //	@Param			brand_name	query		string	false	"brand name to search for"
 //	@Param			tags	query		string	false	"tags to search for"
 //
-// @Success		200	{array}     data.Contribution
+// @Success		200	{array}     ContributionListResponse
 // @Failure		400	{object}    ErrorMessage
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
@@ -53,7 +63,7 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	contributions, err := app.models.Contributions.GetAll(
+	contributions, metadata, err := app.models.Contributions.GetAll(
 		input.BrandName,
 		input.Tags,
 		input.Filters,
@@ -63,7 +73,12 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, contributions, nil)
+	err = app.writeJSON(
+		w,
+		http.StatusOK,
+		ContributionListResponse{Metadata: metadata, Contributions: contributions},
+		nil,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -75,7 +90,7 @@ func (app *application) listContributionsHandler(w http.ResponseWriter, r *http.
 // @Produce		json
 // @Accept     json
 // @Param      Contribution	body	ContributionPost	true	"New contribution to an infinity bottle"
-// @Success		201	{object}    ContributionPost
+// @Success		201	{object}    ContributionResponse
 // @Failure		400	{object}    ErrorMessage
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
@@ -111,7 +126,12 @@ func (app *application) createContributionHandler(w http.ResponseWriter, r *http
 	headers := make(http.Header)
 	headers.Set("Location", fmt.Sprintf("/v1/contributions/%d", contribution.ID))
 
-	err = app.writeJSON(w, http.StatusCreated, contribution, headers)
+	err = app.writeJSON(
+		w,
+		http.StatusCreated,
+		ContributionResponse{Metadata: data.Metadata{}, Contribution: *contribution},
+		headers,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -122,7 +142,7 @@ func (app *application) createContributionHandler(w http.ResponseWriter, r *http
 // @Param          id		path	int	true	"ID"
 // @Tags			contribution
 // @Produce		json
-// @Success		200	{object}    data.Contribution
+// @Success		200	{object}    ContributionResponse
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
 // @Router			/v1/contributions/{id} [get]
@@ -143,7 +163,12 @@ func (app *application) getContributionHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, contribution, nil)
+	err = app.writeJSON(
+		w,
+		http.StatusOK,
+		ContributionResponse{Metadata: data.Metadata{}, Contribution: *contribution},
+		nil,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -155,7 +180,7 @@ func (app *application) getContributionHandler(w http.ResponseWriter, r *http.Re
 // @Param      Contribution	body	ContributionPost	true	"Update contribution to an infinity bottle"
 // @Tags			contribution
 // @Produce		json
-// @Success		200	{object}    data.Contribution
+// @Success		200	{object}    ContributionResponse
 // @Failure		404	{object}    ErrorMessage
 // @Failure		500	{object}    ErrorMessage
 // @Router			/v1/contributions/{id} [put]
@@ -207,7 +232,12 @@ func (app *application) updateContributionHandler(w http.ResponseWriter, r *http
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, contribution, nil)
+	err = app.writeJSON(
+		w,
+		http.StatusOK,
+		ContributionResponse{Metadata: data.Metadata{}, Contribution: *contribution},
+		nil,
+	)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
