@@ -34,5 +34,5 @@ func (app *application) routes() http.Handler {
 
 	router.HandlerFunc(http.MethodGet, "/swagger/*any", httpSwagger.WrapHandler)
 
-	return app.recoverPanic(app.rateLimit(router))
+	return app.recoverPanic(app.enableCORS(app.rateLimit(router)))
 }
